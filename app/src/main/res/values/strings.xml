@@ -1,3 +1,19 @@
 <resources>
     <string name="app_name">Tamamochi</string>
+    <string name="issueTempTooLow">The ambient temperature is too low.</string>
+    <string name="resolutionTempTooLow">Please find a warmer place to stay.</string>
+    <string name="issueTempTooHigh">The ambient temperature is too high.</string>
+    <string name="resolutionTempTooHigh">Please find a colder place to stay.</string>
+    <string name="issueHumidityTooHigh">The humidity is too high.</string>
+    <string name="resolutionHumidityTooHigh">Please find a dryer place to stay.</string>
+    <string name="issueHumidityTooLow">The humidity is too low.</string>
+    <string name="resolutionHumidityTooLow">Please find a wetter place to stay.</string>
+    <string name="issueAirPressureTooLow">The pressure of the air is too low.</string>
+    <string name="resolutionAirPressureTooLow">Please don\'t stay in a high spot for too long.</string>
+    <string name="issueAirPressureTooHigh">The pressure of the air is too high.</string>
+    <string name="resolutionAirPressureTooHigh">Please find a lower spot.</string>
+    <string name="issueCo2TooHigh">The amount of CO2 in the air is too high.</string>
+    <string name="resolutionCo2TooHigh">Please open a window or find a spot with fresher air.</string>
+    <string name="issueLightTooBright">The light is too bright.</string>
+    <string name="resolutionLightTooBright">DIm the lights or find a darker spot to stay.</string>
 </resources>
