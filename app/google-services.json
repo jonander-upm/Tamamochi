@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "874637838124",
+    "project_id": "tamamochi-b990e",
+    "storage_bucket": "tamamochi-b990e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:874637838124:android:fc7f428471bc8600c68e89",
+        "android_client_info": {
+          "package_name": "es.upm.miw.tamamochi"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "874637838124-v05qb90tcf8peh16mfg0v10kscmj4n8q.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "es.upm.miw.tamamochi",
+            "certificate_hash": "151d3a8be579b889194bc170499c2bfddc0ed6a9"
+          }
+        },
+        {
+          "client_id": "874637838124-tq0d5fgr1k0houbn1cf620loeos008oe.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDwqnX6wK0jH-EPfETw3JDgqaDx9oyKwoo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "874637838124-tq0d5fgr1k0houbn1cf620loeos008oe.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
