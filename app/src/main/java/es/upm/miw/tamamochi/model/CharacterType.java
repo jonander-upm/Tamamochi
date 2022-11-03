@@ -1,4 +1,4 @@
-package es.upm.miw.tamamochi.models;
+package es.upm.miw.tamamochi.model;
 
 public enum CharacterType {
     AXOLITTLE(0,0,0,0, 0),
