@@ -1,7 +1,5 @@
-package es.upm.miw.tamamochi.models;
+package es.upm.miw.tamamochi.model;
 
-import java.time.Instant;
-import java.time.LocalDateTime;
 import java.util.Date;
 
 public enum CharacterAge {

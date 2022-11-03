@@ -1,7 +1,6 @@
-package es.upm.miw.tamamochi.models;
+package es.upm.miw.tamamochi.model;
 
 import java.util.Date;
-import java.util.List;
 
 public class Character {
     private CharacterType characterType;
