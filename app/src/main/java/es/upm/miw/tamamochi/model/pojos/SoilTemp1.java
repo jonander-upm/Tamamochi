@@ -46,4 +46,11 @@ public class SoilTemp1 {
         this.value = value;
     }
 
+    @Override
+    public String toString() {
+        return "SoilTemp1{" +
+                "ts=" + ts +
+                ", value='" + value + '\'' +
+                '}';
+    }
 }

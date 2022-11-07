@@ -46,4 +46,11 @@ public class Humidity {
         this.value = value;
     }
 
+    @Override
+    public String toString() {
+        return "Humidity{" +
+                "ts=" + ts +
+                ", value='" + value + '\'' +
+                '}';
+    }
 }

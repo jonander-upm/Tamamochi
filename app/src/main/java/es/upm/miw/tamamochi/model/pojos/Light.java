@@ -47,4 +47,11 @@ public class Light {
         this.value = value;
     }
 
+    @Override
+    public String toString() {
+        return "Light{" +
+                "ts=" + ts +
+                ", value='" + value + '\'' +
+                '}';
+    }
 }

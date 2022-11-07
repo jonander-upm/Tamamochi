@@ -46,4 +46,11 @@ public class Co2 {
         this.value = value;
     }
 
+    @Override
+    public String toString() {
+        return "Co2{" +
+                "ts=" + ts +
+                ", value='" + value + '\'' +
+                '}';
+    }
 }

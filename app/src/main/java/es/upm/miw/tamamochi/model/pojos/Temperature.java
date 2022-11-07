@@ -46,4 +46,11 @@ public class Temperature {
         this.value = value;
     }
 
+    @Override
+    public String toString() {
+        return "Temperature{" +
+                "ts=" + ts +
+                ", value='" + value + '\'' +
+                '}';
+    }
 }
