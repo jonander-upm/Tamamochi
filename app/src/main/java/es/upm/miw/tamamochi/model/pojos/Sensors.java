@@ -100,4 +100,15 @@ public class Sensors {
         this.temperature = temperature;
     }
 
+    @Override
+    public String toString() {
+        return "Sensors{" +
+                "co2=" + co2 +
+                ", humidity=" + humidity +
+                ", light=" + light +
+                ", soilTemp1=" + soilTemp1 +
+                ", soilTemp2=" + soilTemp2 +
+                ", temperature=" + temperature +
+                '}';
+    }
 }

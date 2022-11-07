@@ -50,7 +50,7 @@ public enum CharacterStatus {
         return resolutionStringId;
     }
 
-    public List<CharacterStatus> getCharacterStatusList(Measurement measurement) {
+    public static List<CharacterStatus> getCharacterStatusList(Measurement measurement) {
         List<CharacterStatus> characterStatusList = new ArrayList<>();
         Temperature temperature = measurement.getTemperature().get(0);
         Humidity humidity = measurement.getHumidity().get(0);
