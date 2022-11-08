@@ -1,9 +1,9 @@
-package es.upm.miw.tamamochi.model.pojos;
+package es.upm.miw.tamamochi.domain.model.pojos;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Co2 {
+public class Humidity {
 
     @SerializedName("ts")
     @Expose
@@ -16,7 +16,7 @@ public class Co2 {
      * No args constructor for use in serialization
      * 
      */
-    public Co2() {
+    public Humidity() {
     }
 
     /**
@@ -24,7 +24,7 @@ public class Co2 {
      * @param value
      * @param ts
      */
-    public Co2(Long ts, String value) {
+    public Humidity(Long ts, String value) {
         super();
         this.ts = ts;
         this.value = value;
@@ -48,7 +48,7 @@ public class Co2 {
 
     @Override
     public String toString() {
-        return "Co2{" +
+        return "Humidity{" +
                 "ts=" + ts +
                 ", value='" + value + '\'' +
                 '}';

@@ -1,4 +1,4 @@
-package es.upm.miw.tamamochi.model;
+package es.upm.miw.tamamochi.domain.model;
 
 import java.util.Date;
 

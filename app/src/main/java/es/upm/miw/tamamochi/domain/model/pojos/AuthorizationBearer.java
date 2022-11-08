@@ -1,4 +1,4 @@
-package es.upm.miw.tamamochi.model.pojos;
+package es.upm.miw.tamamochi.domain.model.pojos;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
