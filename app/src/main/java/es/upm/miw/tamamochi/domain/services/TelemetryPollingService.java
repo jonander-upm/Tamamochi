@@ -1,4 +1,4 @@
-package es.upm.miw.tamamochi.services;
+package es.upm.miw.tamamochi.domain.services;
 
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -24,7 +24,7 @@ import es.upm.miw.tamamochi.MainActivity;
 import es.upm.miw.tamamochi.R;
 import es.upm.miw.tamamochi.device.ISpikeRESTAPIService;
 import es.upm.miw.tamamochi.domain.model.CharacterStatus;
-import es.upm.miw.tamamochi.domain.model.pojos.Measurement;
+import es.upm.miw.tamamochi.domain.model.pojos.measurements.Measurement;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
@@ -66,7 +66,6 @@ public class TelemetryPollingService extends Service {
                         for(CharacterStatus statusItem : characterStatusList) {
                             nBuilder.setContentText(getString(statusItem.getIssueStringId()));
                             nm.notify(NOTIFICATION_ID, nBuilder.build());
-                            Log.i(TAG, "AAAAAAA");
                         }
                     }
                 }

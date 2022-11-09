@@ -1,9 +1,9 @@
 package es.upm.miw.tamamochi.device;
 
-import es.upm.miw.tamamochi.domain.model.pojos.AuthorizationBearer;
-import es.upm.miw.tamamochi.domain.model.pojos.Credentials;
-import es.upm.miw.tamamochi.domain.model.pojos.Measurement;
-import es.upm.miw.tamamochi.domain.model.pojos.Sensors;
+import es.upm.miw.tamamochi.domain.model.pojos.measurements.AuthorizationBearer;
+import es.upm.miw.tamamochi.domain.model.pojos.measurements.Credentials;
+import es.upm.miw.tamamochi.domain.model.pojos.measurements.Measurement;
+import es.upm.miw.tamamochi.domain.model.pojos.measurements.Sensors;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;

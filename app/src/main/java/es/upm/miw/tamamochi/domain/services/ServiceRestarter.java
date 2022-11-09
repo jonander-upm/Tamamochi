@@ -1,11 +1,9 @@
-package es.upm.miw.tamamochi.services;
+package es.upm.miw.tamamochi.domain.services;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
-import android.os.Handler;
-import android.os.Looper;
 import android.util.Log;
 
 public class ServiceRestarter extends BroadcastReceiver {
