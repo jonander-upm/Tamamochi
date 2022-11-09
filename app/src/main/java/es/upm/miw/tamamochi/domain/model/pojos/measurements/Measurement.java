@@ -1,11 +1,11 @@
 
-package es.upm.miw.tamamochi.domain.model.pojos;
+package es.upm.miw.tamamochi.domain.model.pojos.measurements;
 
 import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Sensors {
+public class Measurement {
 
     @SerializedName("co2")
     @Expose
@@ -30,7 +30,7 @@ public class Sensors {
      * No args constructor for use in serialization
      * 
      */
-    public Sensors() {
+    public Measurement() {
     }
 
     /**
@@ -42,7 +42,7 @@ public class Sensors {
      * @param temperature
      * @param humidity
      */
-    public Sensors(List<Co2> co2, List<Humidity> humidity, List<Light> light, List<SoilTemp1> soilTemp1, List<SoilTemp2> soilTemp2, List<Temperature> temperature) {
+    public Measurement(List<Co2> co2, List<Humidity> humidity, List<Light> light, List<SoilTemp1> soilTemp1, List<SoilTemp2> soilTemp2, List<Temperature> temperature) {
         super();
         this.co2 = co2;
         this.humidity = humidity;
@@ -102,7 +102,7 @@ public class Sensors {
 
     @Override
     public String toString() {
-        return "Sensors{" +
+        return "Measurement{" +
                 "co2=" + co2 +
                 ", humidity=" + humidity +
                 ", light=" + light +

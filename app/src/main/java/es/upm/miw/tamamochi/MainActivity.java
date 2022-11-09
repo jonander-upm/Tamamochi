@@ -3,14 +3,13 @@ package es.upm.miw.tamamochi;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.Observer;
 
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.firebase.ui.auth.AuthUI;
@@ -19,16 +18,14 @@ import com.firebase.ui.auth.IdpResponse;
 import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.squareup.picasso.Picasso;
 
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 
-import es.upm.miw.tamamochi.domain.model.Character;
-import es.upm.miw.tamamochi.domain.model.CharacterType;
-import es.upm.miw.tamamochi.domain.repositories.CharacterRepository;
-import es.upm.miw.tamamochi.services.ServiceRestarter;
-import es.upm.miw.tamamochi.services.TelemetryPollingService;
+import es.upm.miw.tamamochi.domain.services.ExternalWeatherService;
+import es.upm.miw.tamamochi.domain.services.ServiceRestarter;
+import es.upm.miw.tamamochi.domain.services.TelemetryPollingService;
 
 public class MainActivity extends AppCompatActivity {
     static final String TAG = "MiW";
@@ -72,6 +69,11 @@ public class MainActivity extends AppCompatActivity {
                     .build();
             signInLauncher.launch(signInIntent);
         }
+        startServices();
+    }
+
+    public void startServices() {
+        startService(new Intent(this, ExternalWeatherService.class));
         if (!isMyServiceRunning(TelemetryPollingService.class)) {
             startService(new Intent(this, TelemetryPollingService.class));
         }
@@ -117,7 +119,10 @@ public class MainActivity extends AppCompatActivity {
         if(currentUser != null) {
             tvTest = findViewById(R.id.testView);
             tvTest.setText("Hello " + currentUser.getDisplayName() + "!");
-
+            ImageView ivTest = findViewById(R.id.testImage);
+            Picasso.get()
+                .load(currentUser.getPhotoUrl())
+                    .into(ivTest);
         }
     }
 }

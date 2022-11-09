@@ -4,11 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import es.upm.miw.tamamochi.R;
-import es.upm.miw.tamamochi.domain.model.pojos.Temperature;
-import es.upm.miw.tamamochi.domain.model.pojos.Co2;
-import es.upm.miw.tamamochi.domain.model.pojos.Humidity;
-import es.upm.miw.tamamochi.domain.model.pojos.Light;
-import es.upm.miw.tamamochi.domain.model.pojos.Measurement;
+import es.upm.miw.tamamochi.domain.model.pojos.measurements.Temperature;
+import es.upm.miw.tamamochi.domain.model.pojos.measurements.Co2;
+import es.upm.miw.tamamochi.domain.model.pojos.measurements.Humidity;
+import es.upm.miw.tamamochi.domain.model.pojos.measurements.Light;
+import es.upm.miw.tamamochi.domain.model.pojos.measurements.Measurement;
 
 public enum CharacterStatus {
     COLD(R.string.issueTempTooLow, R.string.resolutionTempTooLow, 1.0),

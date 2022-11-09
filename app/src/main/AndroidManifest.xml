@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
+    <!-- Always include this permission -->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
     <application
@@ -27,11 +30,15 @@
                 android:value="" />
         </activity>
         <service
-            android:name=".services.TelemetryPollingService"
+            android:name=".domain.services.TelemetryPollingService"
             android:label="Telemetry Polling Service" >
         </service>
+        <service
+            android:name=".domain.services.ExternalWeatherService"
+            android:label="External Weather Service" >
+        </service>
         <receiver
-            android:name=".services.ServiceRestarter"
+            android:name=".domain.services.ServiceRestarter"
             android:enabled="true"
             android:exported="true">
             <intent-filter>
