@@ -17,13 +17,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 
-import java.io.IOException;
 import java.util.List;
 
-import es.upm.miw.tamamochi.device.ISpikeRESTAPIService;
-import es.upm.miw.tamamochi.device.IWeatherRESTAPIService;
-import es.upm.miw.tamamochi.domain.model.CharacterStatus;
-import es.upm.miw.tamamochi.domain.model.pojos.measurements.Measurement;
+import es.upm.miw.tamamochi.domain.services.device.IWeatherRESTAPIService;
 import es.upm.miw.tamamochi.domain.model.pojos.weather.ExternalWeather;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;

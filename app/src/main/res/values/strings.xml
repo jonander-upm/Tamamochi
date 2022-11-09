@@ -19,4 +19,5 @@
     <string name="txtNotifAssistanceNeededTitle">Your Tamamochi needs your assistance</string>
     <string name="txtNotifAssistanceNeededText">Open the application to check your Tamamochi\'s status</string>
     <string name="txtAppRunningInBackground">The application is running in background</string>
+    <string name="altUserIcon">User Icon</string>
 </resources>

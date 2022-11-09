@@ -1,4 +1,4 @@
-package es.upm.miw.tamamochi.device;
+package es.upm.miw.tamamochi.domain.services.device;
 
 import es.upm.miw.tamamochi.domain.model.pojos.weather.ExternalWeather;
 import retrofit2.Call;

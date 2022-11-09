@@ -22,7 +22,7 @@ import java.util.List;
 
 import es.upm.miw.tamamochi.MainActivity;
 import es.upm.miw.tamamochi.R;
-import es.upm.miw.tamamochi.device.ISpikeRESTAPIService;
+import es.upm.miw.tamamochi.domain.services.device.ISpikeRESTAPIService;
 import es.upm.miw.tamamochi.domain.model.CharacterStatus;
 import es.upm.miw.tamamochi.domain.model.pojos.measurements.Measurement;
 import okhttp3.OkHttpClient;
