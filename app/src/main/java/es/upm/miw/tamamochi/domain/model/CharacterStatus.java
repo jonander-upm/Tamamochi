@@ -50,29 +50,23 @@ public enum CharacterStatus {
         return resolutionStringId;
     }
 
-    public static List<CharacterStatus> getCharacterStatusList(Measurement measurement) {
+    public static List<CharacterStatus> getCharacterStatusList(Environment environment) {
         List<CharacterStatus> characterStatusList = new ArrayList<>();
-        Temperature temperature = measurement.getTemperature().get(0);
-        Humidity humidity = measurement.getHumidity().get(0);
-        Light light = measurement.getLight().get(0);
-        Co2 co2 = measurement.getCo2().get(0);
 
-        if(Double.parseDouble(temperature.getValue()) < COLD_THRESHOLD) {
+        if(environment.getTemperature() < COLD_THRESHOLD) {
             characterStatusList.add(CharacterStatus.COLD);
-        }
-        if(Double.parseDouble(temperature.getValue()) > HOT_THRESHOLD) {
+        } else if(environment.getTemperature() > HOT_THRESHOLD) {
             characterStatusList.add(CharacterStatus.HOT);
         }
-        if (Double.parseDouble(humidity.getValue()) < DRY_THRESHOLD) {
+        if (environment.getHumidity() < DRY_THRESHOLD) {
             characterStatusList.add(CharacterStatus.DRY);
-        }
-        if (Double.parseDouble(humidity.getValue()) > HUMID_THRESHOLD) {
+        } else if (environment.getHumidity() > HUMID_THRESHOLD) {
             characterStatusList.add(CharacterStatus.HUMID);
         }
-        if (Double.parseDouble(light.getValue()) > BRIGHT_LIGHT_THRESHOLD) {
+        if (environment.getLight() > BRIGHT_LIGHT_THRESHOLD) {
             characterStatusList.add(CharacterStatus.BRIGHT_LIGHT);
         }
-        if (Double.parseDouble(co2.getValue()) > HIGH_CO2_THRESHOLD) {
+        if (environment.getCo2() > HIGH_CO2_THRESHOLD) {
             characterStatusList.add(CharacterStatus.HIGH_CO2);
         }
         return characterStatusList;

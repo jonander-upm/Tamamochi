@@ -22,6 +22,12 @@ import java.util.List;
 
 import es.upm.miw.tamamochi.MainActivity;
 import es.upm.miw.tamamochi.R;
+import es.upm.miw.tamamochi.domain.model.Environment;
+import es.upm.miw.tamamochi.domain.model.TamamochiViewModel;
+import es.upm.miw.tamamochi.domain.model.pojos.measurements.Co2;
+import es.upm.miw.tamamochi.domain.model.pojos.measurements.Humidity;
+import es.upm.miw.tamamochi.domain.model.pojos.measurements.Light;
+import es.upm.miw.tamamochi.domain.model.pojos.measurements.Temperature;
 import es.upm.miw.tamamochi.domain.services.device.ISpikeRESTAPIService;
 import es.upm.miw.tamamochi.domain.model.CharacterStatus;
 import es.upm.miw.tamamochi.domain.model.pojos.measurements.Measurement;
@@ -35,14 +41,15 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class TelemetryPollingService extends Service {
     static final String TAG = "MiW - MeasurementService";
-    static final String CHANNEL_ID = "12345";
-    static final int NOTIFICATION_ID = 12345;
+
+    private TamamochiViewModel tamamochiViewModel;
+
     private final LocalBinder mBinder = new LocalBinder();
 
     private ISpikeRESTAPIService apiService;
     private static final String API_LOGIN_POST = "https://thingsboard.cloud/api/auth/"; // Base url to obtain token
     private static final String API_BASE_GET = "https://thingsboard.cloud:443/api/plugins/telemetry/DEVICE/"; // Base url to obtain data
-    private static final String TOKEN = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJzdHVkZW50dXBtMjAyMkBnbWFpbC5jb20iLCJ1c2VySWQiOiI4NDg1OTU2MC00NzU2LTExZWQtOTQ1YS1lOWViYTIyYjlkZjYiLCJzY29wZXMiOlsiVEVOQU5UX0FETUlOIl0sImlzcyI6InRoaW5nc2JvYXJkLmNsb3VkIiwiaWF0IjoxNjY3ODIwOTIyLCJleHAiOjE2Njc4NDk3MjIsImZpcnN0TmFtZSI6IlN0dWRlbnQiLCJsYXN0TmFtZSI6IlVQTSIsImVuYWJsZWQiOnRydWUsImlzUHVibGljIjpmYWxzZSwiaXNCaWxsaW5nU2VydmljZSI6ZmFsc2UsInByaXZhY3lQb2xpY3lBY2NlcHRlZCI6dHJ1ZSwidGVybXNPZlVzZUFjY2VwdGVkIjp0cnVlLCJ0ZW5hbnRJZCI6ImUyZGQ2NTAwLTY3OGEtMTFlYi05MjJjLWY3NDAyMTlhYmNiOCIsImN1c3RvbWVySWQiOiIxMzgxNDAwMC0xZGQyLTExYjItODA4MC04MDgwODA4MDgwODAifQ.ppSBbEmFFCctDXM-n8etw420BEJtCDI9gJFkrYQUAUWzEORGkRTjpZd3ZLq95-Pl5czw12uVQivsEx6uU2hvyg";
+    private static final String TOKEN = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJzdHVkZW50dXBtMjAyMkBnbWFpbC5jb20iLCJ1c2VySWQiOiI4NDg1OTU2MC00NzU2LTExZWQtOTQ1YS1lOWViYTIyYjlkZjYiLCJzY29wZXMiOlsiVEVOQU5UX0FETUlOIl0sImlzcyI6InRoaW5nc2JvYXJkLmNsb3VkIiwiaWF0IjoxNjY4MDg1MDUxLCJleHAiOjE2NjgxMTM4NTEsImZpcnN0TmFtZSI6IlN0dWRlbnQiLCJsYXN0TmFtZSI6IlVQTSIsImVuYWJsZWQiOnRydWUsImlzUHVibGljIjpmYWxzZSwiaXNCaWxsaW5nU2VydmljZSI6ZmFsc2UsInByaXZhY3lQb2xpY3lBY2NlcHRlZCI6dHJ1ZSwidGVybXNPZlVzZUFjY2VwdGVkIjp0cnVlLCJ0ZW5hbnRJZCI6ImUyZGQ2NTAwLTY3OGEtMTFlYi05MjJjLWY3NDAyMTlhYmNiOCIsImN1c3RvbWVySWQiOiIxMzgxNDAwMC0xZGQyLTExYjItODA4MC04MDgwODA4MDgwODAifQ.7R453K4QBkVGfZ4Cv3L7Wy4EPsSkcqpVhshZZFUTtWSTNrRYD6A0E8hikJ8gG6MM9eMiToqBMByBCW9XY3Q66Q";
     private static final String BEARER_TOKEN = "Bearer " + TOKEN;
     private static final String DEVICE_ID = "cf87adf0-dc76-11ec-b1ed-e5d3f0ce866e";
     private static final String USER_THB = "studentupm2022@gmail.com";
@@ -50,9 +57,6 @@ public class TelemetryPollingService extends Service {
 
     private Handler handler;
     public static final long DEFAULT_SYNC_INTERVAL = 60 * 1000;
-
-    NotificationManagerCompat nm;
-    NotificationCompat.Builder nBuilder;
 
     private final Runnable runnableService = new Runnable() {
         @Override
@@ -62,11 +66,8 @@ public class TelemetryPollingService extends Service {
                 public void onResponse(Call<Measurement> call, Response<Measurement> response) {
                     Measurement lm = response.body();
                     if(lm != null) {
-                        List<CharacterStatus> characterStatusList = CharacterStatus.getCharacterStatusList(lm);
-                        for(CharacterStatus statusItem : characterStatusList) {
-                            nBuilder.setContentText(getString(statusItem.getIssueStringId()));
-                            nm.notify(NOTIFICATION_ID, nBuilder.build());
-                        }
+                        Environment env = parseEnvironment(lm);
+                        tamamochiViewModel.setEnvironment(env);
                     }
                 }
 
@@ -78,6 +79,19 @@ public class TelemetryPollingService extends Service {
             handler.postDelayed(runnableService, DEFAULT_SYNC_INTERVAL);
         }
     };
+
+    private Environment parseEnvironment(Measurement measurement) {
+        Temperature temp = measurement.getTemperature().get(0);
+        Humidity hum = measurement.getHumidity().get(0);
+        Co2 co2 = measurement.getCo2().get(0);
+        Light light = measurement.getLight().get(0);
+        return Environment.builder()
+                .temperature(Double.parseDouble(temp.getValue()))
+                .humidity(Double.parseDouble(hum.getValue()))
+                .co2(Double.parseDouble(co2.getValue()))
+                .light(Double.parseDouble(light.getValue()))
+                .build();
+    }
 
     public Call<Measurement> getLastTelemetry() {
         Measurement lm;
@@ -142,31 +156,10 @@ public class TelemetryPollingService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        setupStatusNotifications();
+        tamamochiViewModel = TamamochiViewModel.getInstance();
         handler = new Handler();
         handler.post(runnableService);
         return android.app.Service.START_STICKY;
-    }
-
-    private void setupStatusNotifications() {
-        Intent tapIntent = new Intent(this, MainActivity.class);
-        tapIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, tapIntent, PendingIntent.FLAG_IMMUTABLE);
-        nm = NotificationManagerCompat.from(getApplicationContext());
-        nBuilder = new NotificationCompat.Builder(getApplicationContext(), CHANNEL_ID)
-                .setSmallIcon(R.drawable.ic_launcher_foreground)
-                .setContentTitle(getString(R.string.txtNotifAssistanceNeededTitle))
-                .setContentIntent(pendingIntent)
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-                .setAutoCancel(true);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel channel = new NotificationChannel(
-                    CHANNEL_ID,
-                    "Status Notification Channel",
-                    NotificationManager.IMPORTANCE_DEFAULT);
-            nm.createNotificationChannel(channel);
-            nBuilder.setChannelId(CHANNEL_ID);
-        }
     }
 
     @Override
