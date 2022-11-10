@@ -19,6 +19,8 @@ import androidx.core.app.ActivityCompat;
 
 import java.util.List;
 
+import es.upm.miw.tamamochi.domain.model.Environment;
+import es.upm.miw.tamamochi.domain.model.TamamochiViewModel;
 import es.upm.miw.tamamochi.domain.services.device.IWeatherRESTAPIService;
 import es.upm.miw.tamamochi.domain.model.pojos.weather.ExternalWeather;
 import okhttp3.OkHttpClient;
@@ -33,6 +35,8 @@ public class ExternalWeatherService extends Service implements LocationListener 
     static final String TAG = "MiW - ExternalWeatherService";
     static final String API_BASE = "https://api.openweathermap.org/data/2.5/";
     static final String API_KEY = "c52e71938484116d72f2b24d8fe540ce";
+
+    private TamamochiViewModel tamamochiViewModel;
 
     private final ExternalWeatherService.LocalBinder mBinder = new ExternalWeatherService.LocalBinder();
 
@@ -52,6 +56,10 @@ public class ExternalWeatherService extends Service implements LocationListener 
                         ExternalWeather ew = response.body();
                         if (ew != null) {
                             Log.i(TAG, "Current weather: " + ew.getWeather().get(0).getDescription());
+                            Environment env = tamamochiViewModel.getEnvironment().getValue();
+                            assert env != null;
+                            env.setWeatherIcon(ew.getWeather().get(0).getIcon());
+                            tamamochiViewModel.setEnvironment(env);
                         }
                     }
 
@@ -112,6 +120,7 @@ public class ExternalWeatherService extends Service implements LocationListener 
     @Override
     public void onCreate() {
         super.onCreate();
+        tamamochiViewModel = TamamochiViewModel.getInstance();
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;

@@ -3,6 +3,7 @@ package es.upm.miw.tamamochi;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
 
 import android.app.ActivityManager;
 import android.content.Context;
@@ -23,8 +24,11 @@ import com.squareup.picasso.Picasso;
 import java.util.Arrays;
 import java.util.List;
 
+import es.upm.miw.tamamochi.domain.model.Environment;
+import es.upm.miw.tamamochi.domain.model.TamamochiViewModel;
 import es.upm.miw.tamamochi.domain.services.ExternalWeatherService;
 import es.upm.miw.tamamochi.domain.services.ServiceRestarter;
+import es.upm.miw.tamamochi.domain.services.TamamochiNotificationManager;
 import es.upm.miw.tamamochi.domain.services.TelemetryPollingService;
 
 public class MainActivity extends AppCompatActivity {
@@ -32,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
 
     TextView tvTest;
+    private TamamochiViewModel tamamochiViewModel;
 
     ActivityResultLauncher<Intent> signInLauncher;
 
@@ -50,6 +55,8 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
         );
+
+        tamamochiViewModel = TamamochiViewModel.getInstance();
     }
 
     @Override
@@ -75,7 +82,12 @@ public class MainActivity extends AppCompatActivity {
     public void startServices() {
         startService(new Intent(this, ExternalWeatherService.class));
         if (!isMyServiceRunning(TelemetryPollingService.class)) {
-            startService(new Intent(this, TelemetryPollingService.class));
+            Intent pollingServiceIntent = new Intent(this, TelemetryPollingService.class);
+            startService(pollingServiceIntent);
+        }
+        if (!isMyServiceRunning(TamamochiNotificationManager.class)) {
+            Intent notifServiceIntent = new Intent(this, TamamochiNotificationManager.class);
+            startService(notifServiceIntent);
         }
     }
 
@@ -120,9 +132,18 @@ public class MainActivity extends AppCompatActivity {
             tvTest = findViewById(R.id.testView);
             tvTest.setText("Hello " + currentUser.getDisplayName() + "!");
             ImageView ivTest = findViewById(R.id.testImage);
-            Picasso.get()
+            /*Picasso.get()
                 .load(currentUser.getPhotoUrl())
-                    .into(ivTest);
+                    .into(ivTest);*/
+            tamamochiViewModel.getEnvironment().observe(this, new Observer<Environment>() {
+                @Override
+                public void onChanged(Environment environment) {
+                    if(environment.getWeatherIcon() != null) {
+                        Picasso.get().load("http://openweathermap.org/img/wn/" + environment.getWeatherIcon() + "@2x.png")
+                                .into(ivTest);
+                    }
+                }
+            });
         }
     }
 }
