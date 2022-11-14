@@ -7,12 +7,17 @@ public class Character {
     private CharacterType characterType;
     private String characterName;
     private Date characterBirthDate;
+    private Boolean alive;
     private Integer life;
+
+    public Character() {
+    }
 
     public Character(CharacterType characterType, String characterName, Date characterBirthDate) {
         this.characterType = characterType;
         this.characterName = characterName;
         this.characterBirthDate = characterBirthDate;
+        this.alive = true;
         this.life = 100;
     }
 
@@ -54,5 +59,13 @@ public class Character {
 
     public void setLife(Integer life) {
         this.life = life;
+    }
+
+    public Boolean getAlive() {
+        return alive;
+    }
+
+    public void setAlive(Boolean alive) {
+        this.alive = alive;
     }
 }

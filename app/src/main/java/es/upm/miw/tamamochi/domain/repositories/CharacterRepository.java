@@ -21,9 +21,15 @@ public class CharacterRepository {
     private FirebaseDatabase mFirebaseDatabase;
     private DatabaseReference mCharacterDatabaseReference;
 
-    public CharacterRepository() {
+    private static final CharacterRepository INSTANCE = new CharacterRepository();
+
+    private CharacterRepository() {
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         mCharacterDatabaseReference = mFirebaseDatabase.getReference().child("characters");
+    }
+
+    public static CharacterRepository getInstance() {
+        return INSTANCE;
     }
 
     public Character saveCharacter(Character character, String uid) {
@@ -87,7 +93,8 @@ public class CharacterRepository {
         MutableLiveData<Character> character = new MutableLiveData<>();
         mCharacterDatabaseReference
                 .child(uid)
-                .equalTo(alive, "alive")
+                .orderByChild("alive")
+                .equalTo(alive)
                 .addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {

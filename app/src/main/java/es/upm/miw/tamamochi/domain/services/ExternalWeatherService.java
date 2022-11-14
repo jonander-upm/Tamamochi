@@ -57,9 +57,10 @@ public class ExternalWeatherService extends Service implements LocationListener 
                         if (ew != null) {
                             Log.i(TAG, "Current weather: " + ew.getWeather().get(0).getDescription());
                             Environment env = tamamochiViewModel.getEnvironment().getValue();
-                            assert env != null;
-                            env.setWeatherIcon(ew.getWeather().get(0).getIcon());
-                            tamamochiViewModel.setEnvironment(env);
+                            if(env != null) {
+                                env.setWeatherIcon(ew.getWeather().get(0).getIcon());
+                                tamamochiViewModel.setEnvironment(env);
+                            }
                         }
                     }
 

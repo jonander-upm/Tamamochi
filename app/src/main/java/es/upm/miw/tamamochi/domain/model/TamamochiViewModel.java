@@ -3,6 +3,8 @@ package es.upm.miw.tamamochi.domain.model;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.google.firebase.auth.FirebaseUser;
+
 import java.io.Serializable;
 import java.util.List;
 
@@ -10,6 +12,7 @@ import es.upm.miw.tamamochi.domain.model.CharacterStatus;
 import es.upm.miw.tamamochi.domain.model.Environment;
 
 public class TamamochiViewModel extends ViewModel implements Serializable {
+    FirebaseUser currentUser;
     MutableLiveData<Integer> characterLife;
     MutableLiveData<List<CharacterStatus>> characterStatusList;
     MutableLiveData<Environment> environment;
@@ -49,5 +52,13 @@ public class TamamochiViewModel extends ViewModel implements Serializable {
     public void setEnvironment(Environment environment) {
         this.environment.setValue(environment);
         this.characterStatusList.setValue(CharacterStatus.getCharacterStatusList(environment));
+    }
+
+    public FirebaseUser getCurrentUser() {
+        return currentUser;
+    }
+
+    public void setCurrentUser(FirebaseUser currentUser) {
+        this.currentUser = currentUser;
     }
 }

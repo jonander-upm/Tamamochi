@@ -1,8 +1,10 @@
 package es.upm.miw.tamamochi.domain.model;
 
+import es.upm.miw.tamamochi.R;
+
 public enum CharacterType {
-    AXOLITTLE(0,0,0,0, 0),
-    CAPYBARBARA(0,0,0,0, 0); // TODO add character drawables
+    AXOLITTLE(0,0, R.drawable.axolittle_default,0, 0),
+    CAPYBARBARA(0,0,R.drawable.ic_launcher_foreground,0, 0); // TODO add character drawables
 
     final int eggDrawableId;
     final int babyDrawableId;

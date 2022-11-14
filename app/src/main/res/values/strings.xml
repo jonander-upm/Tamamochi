@@ -20,4 +20,11 @@
     <string name="txtNotifAssistanceNeededText">Open the application to check your Tamamochi\'s status</string>
     <string name="txtAppRunningInBackground">The application is running in background</string>
     <string name="altUserIcon">User Icon</string>
+    <string name="txtPlay">Play</string>
+    <string name="txtLoginRegister">Sign In / Sign Up</string>
+    <string name="welcomeMessage">Welcome</string>
+    <string name="txtCharacterSelect">Select your character</string>
+    <string name="txtCharacterType">Character Type</string>
+    <string name="txtCharacterName">Character Name:</string>
+    <string name="txtCreateCharacter">Create</string>
 </resources>

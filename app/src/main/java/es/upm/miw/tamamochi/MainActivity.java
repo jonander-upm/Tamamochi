@@ -10,6 +10,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -17,6 +19,7 @@ import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract;
 import com.firebase.ui.auth.IdpResponse;
 import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.squareup.picasso.Picasso;
@@ -24,8 +27,11 @@ import com.squareup.picasso.Picasso;
 import java.util.Arrays;
 import java.util.List;
 
+import es.upm.miw.tamamochi.activities.CharacterCreationActivity;
+import es.upm.miw.tamamochi.domain.model.Character;
 import es.upm.miw.tamamochi.domain.model.Environment;
 import es.upm.miw.tamamochi.domain.model.TamamochiViewModel;
+import es.upm.miw.tamamochi.domain.repositories.CharacterRepository;
 import es.upm.miw.tamamochi.domain.services.ExternalWeatherService;
 import es.upm.miw.tamamochi.domain.services.ServiceRestarter;
 import es.upm.miw.tamamochi.domain.services.TamamochiNotificationManager;
@@ -35,8 +41,11 @@ public class MainActivity extends AppCompatActivity {
     static final String TAG = "MiW";
     private FirebaseAuth mAuth;
 
-    TextView tvTest;
+    Button playButton;
+    Button loginButton;
+
     private TamamochiViewModel tamamochiViewModel;
+    private CharacterRepository characterRepository;
 
     ActivityResultLauncher<Intent> signInLauncher;
 
@@ -44,8 +53,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mAuth = FirebaseAuth.getInstance();
 
+        instantiateLayoutItems();
+
+        mAuth = FirebaseAuth.getInstance();
         signInLauncher = registerForActivityResult(
                 new FirebaseAuthUIActivityResultContract(),
                 new ActivityResultCallback<FirebaseAuthUIAuthenticationResult>() {
@@ -57,6 +68,12 @@ public class MainActivity extends AppCompatActivity {
         );
 
         tamamochiViewModel = TamamochiViewModel.getInstance();
+        characterRepository = CharacterRepository.getInstance();
+    }
+
+    private void instantiateLayoutItems() {
+        playButton = findViewById(R.id.playButton);
+        loginButton = findViewById(R.id.loginButton);
     }
 
     @Override
@@ -65,18 +82,43 @@ public class MainActivity extends AppCompatActivity {
         // Check if user is signed in (non-null) and update UI accordingly.
         FirebaseUser currentUser = mAuth.getCurrentUser();
         updateUI(currentUser);
-        if(currentUser == null) {
-            List<AuthUI.IdpConfig> providers = Arrays.asList(
-                    new AuthUI.IdpConfig.EmailBuilder().build(),
-                    new AuthUI.IdpConfig.GoogleBuilder().build());
-            // Create and launch sign-in intent
-            Intent signInIntent = AuthUI.getInstance()
-                    .createSignInIntentBuilder()
-                    .setAvailableProviders(providers)
-                    .build();
-            signInLauncher.launch(signInIntent);
-        }
+        setButtonListeners();
         startServices();
+    }
+
+    private void setButtonListeners() {
+        loginButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                List<AuthUI.IdpConfig> providers = Arrays.asList(
+                        new AuthUI.IdpConfig.EmailBuilder().build(),
+                        new AuthUI.IdpConfig.GoogleBuilder().build());
+                // Create and launch sign-in intent
+                Intent signInIntent = AuthUI.getInstance()
+                        .createSignInIntentBuilder()
+                        .setAvailableProviders(providers)
+                        .build();
+                signInLauncher.launch(signInIntent);
+            }
+        });
+        playButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FirebaseUser user = tamamochiViewModel.getCurrentUser();
+                characterRepository.findByUidAndAlive(user.getUid(), true).observe(MainActivity.this, new Observer<Character>() {
+                    @Override
+                    public void onChanged(Character character) {
+                        Intent intent;
+                        if(character == null) {
+                            intent = new Intent(getApplicationContext(), CharacterCreationActivity.class);
+                            startActivity(intent);
+                        } else {
+
+                        }
+                    }
+                });
+            }
+        });
     }
 
     public void startServices() {
@@ -129,21 +171,15 @@ public class MainActivity extends AppCompatActivity {
 
     private void updateUI(FirebaseUser currentUser) {
         if(currentUser != null) {
-            tvTest = findViewById(R.id.testView);
-            tvTest.setText("Hello " + currentUser.getDisplayName() + "!");
-            ImageView ivTest = findViewById(R.id.testImage);
-            /*Picasso.get()
-                .load(currentUser.getPhotoUrl())
-                    .into(ivTest);*/
-            tamamochiViewModel.getEnvironment().observe(this, new Observer<Environment>() {
-                @Override
-                public void onChanged(Environment environment) {
-                    if(environment.getWeatherIcon() != null) {
-                        Picasso.get().load("http://openweathermap.org/img/wn/" + environment.getWeatherIcon() + "@2x.png")
-                                .into(ivTest);
-                    }
-                }
-            });
+            tamamochiViewModel.setCurrentUser(currentUser);
+            playButton.setVisibility(View.VISIBLE);
+            loginButton.setVisibility(View.INVISIBLE);
+            Snackbar.make(findViewById(R.id.menuConstraintView),
+                    getString(R.string.welcomeMessage) + " " + currentUser.getDisplayName() + "!",
+                    Snackbar.LENGTH_SHORT).show();
+        } else {
+            playButton.setVisibility(View.INVISIBLE);
+            loginButton.setVisibility(View.VISIBLE);
         }
     }
 }

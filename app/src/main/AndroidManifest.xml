@@ -30,6 +30,7 @@
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
+        <activity android:name=".activities.CharacterCreationActivity" />
         <service
             android:name=".domain.services.TelemetryPollingService"
             android:label="Telemetry Polling Service" >
