@@ -9,6 +9,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
@@ -98,7 +99,10 @@ public class CharacterRepository {
                 .addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                Character dbCharacter = dataSnapshot.getValue(Character.class);
+                Character dbCharacter = null;
+                for(DataSnapshot childSnapshot : dataSnapshot.getChildren()) {
+                    dbCharacter = childSnapshot.getValue(Character.class);
+                }
                 character.setValue(dbCharacter);
             }
 
@@ -107,6 +111,33 @@ public class CharacterRepository {
 
             }
         });
+        return character;
+    }
+
+    public MutableLiveData<Character> findLatestCharacterByUid(String uid) {
+        MutableLiveData<Character> character = new MutableLiveData<>();
+        mCharacterDatabaseReference
+                .child(uid)
+                .orderByChild("characterBirthDate")
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        Character latestCharacter = null;
+                        for(DataSnapshot childSnapshot : dataSnapshot.getChildren()) {
+                            Character dbCharacter = childSnapshot.getValue(Character.class);
+                            assert dbCharacter != null;
+                            if(latestCharacter == null || dbCharacter.getCharacterBirthDate().after(latestCharacter.getCharacterBirthDate())) {
+                                latestCharacter = dbCharacter;
+                            }
+                        }
+                        character.setValue(latestCharacter);
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
         return character;
     }
 }

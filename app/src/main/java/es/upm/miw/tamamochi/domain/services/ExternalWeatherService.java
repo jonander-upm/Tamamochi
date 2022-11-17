@@ -16,10 +16,10 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
+import androidx.lifecycle.LifecycleService;
 
 import java.util.List;
 
-import es.upm.miw.tamamochi.domain.model.Environment;
 import es.upm.miw.tamamochi.domain.model.TamamochiViewModel;
 import es.upm.miw.tamamochi.domain.services.device.IWeatherRESTAPIService;
 import es.upm.miw.tamamochi.domain.model.pojos.weather.ExternalWeather;
@@ -31,7 +31,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class ExternalWeatherService extends Service implements LocationListener {
+public class ExternalWeatherService extends LifecycleService implements LocationListener {
     static final String TAG = "MiW - ExternalWeatherService";
     static final String API_BASE = "https://api.openweathermap.org/data/2.5/";
     static final String API_KEY = "c52e71938484116d72f2b24d8fe540ce";
@@ -55,12 +55,7 @@ public class ExternalWeatherService extends Service implements LocationListener 
                     public void onResponse(Call<ExternalWeather> call, Response<ExternalWeather> response) {
                         ExternalWeather ew = response.body();
                         if (ew != null) {
-                            Log.i(TAG, "Current weather: " + ew.getWeather().get(0).getDescription());
-                            Environment env = tamamochiViewModel.getEnvironment().getValue();
-                            if(env != null) {
-                                env.setWeatherIcon(ew.getWeather().get(0).getIcon());
-                                tamamochiViewModel.setEnvironment(env);
-                            }
+                            tamamochiViewModel.setExternalEvironment(ew);
                         }
                     }
 
@@ -86,7 +81,6 @@ public class ExternalWeatherService extends Service implements LocationListener 
                 .baseUrl(API_BASE)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
-
         IWeatherRESTAPIService iApi = retrofit.create(IWeatherRESTAPIService.class);
         return iApi.getCurrentWeather(location.getLatitude(), location.getLongitude(), API_KEY);
     }
@@ -115,6 +109,7 @@ public class ExternalWeatherService extends Service implements LocationListener 
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
+        super.onBind(intent);
         return mBinder;
     }
 
@@ -131,8 +126,9 @@ public class ExternalWeatherService extends Service implements LocationListener 
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        super.onStartCommand(intent, flags, startId);
         handler = new Handler();
         handler.post(runnableService);
-        return android.app.Service.START_STICKY;
+        return Service.START_STICKY;
     }
 }

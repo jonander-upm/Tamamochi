@@ -1,5 +1,7 @@
 package es.upm.miw.tamamochi.domain.model;
 
+import android.util.Log;
+
 import java.util.Date;
 
 public enum CharacterAge {
@@ -22,14 +24,19 @@ public enum CharacterAge {
         return ageHours;
     }
 
-    public CharacterAge getCharacterAge(Date birthDate) {
+    public static CharacterAge getCharacterAge(Date birthDate) {
         Date now = new Date();
-        double ageHours = (double) (now.getTime() - birthDate.getTime()) / 60000;
+        double ageHours = (double) (now.getTime() - birthDate.getTime()) / 3600000;
+        Log.i("AgeHours", String.valueOf(ageHours));
         for(CharacterAge characterAge : values()) {
             if(ageHours <= characterAge.getAgeHours()) {
                 return characterAge;
             }
         }
         return CharacterAge.NONE;
+    }
+
+    public int getDrainMultiplier() {
+        return drainMultiplier;
     }
 }

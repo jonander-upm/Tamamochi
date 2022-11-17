@@ -39,6 +39,22 @@
             android:textColor="@color/white"
             android:backgroundTint="@color/title" />
         <Button
+            android:id="@+id/createButton"
+            android:layout_width="250dp"
+            android:layout_height="60dp"
+            android:text="@string/txtCreate"
+            android:fontFamily="@font/bakso_sapi"
+            android:textColor="@color/white"
+            android:backgroundTint="@color/title" />
+        <Button
+            android:id="@+id/characterListButton"
+            android:layout_width="250dp"
+            android:layout_height="60dp"
+            android:text="@string/txtCharacterListBtn"
+            android:fontFamily="@font/bakso_sapi"
+            android:textColor="@color/white"
+            android:backgroundTint="@color/title" />
+        <Button
             android:id="@+id/loginButton"
             android:layout_width="250dp"
             android:layout_height="60dp"

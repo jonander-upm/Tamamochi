@@ -31,8 +31,10 @@
                 android:value="" />
         </activity>
         <activity android:name=".activities.CharacterCreationActivity" />
+        <activity android:name=".activities.GameMainActivity" />
+        <activity android:name=".activities.CharacterListActivity" />
         <service
-            android:name=".domain.services.TelemetryPollingService"
+            android:name=".domain.services.TamamochiPollingService"
             android:label="Telemetry Polling Service" >
         </service>
         <service
