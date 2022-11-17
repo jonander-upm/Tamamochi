@@ -1,5 +1,7 @@
 package es.upm.miw.tamamochi.domain.model;
 
+import android.util.Log;
+
 import java.util.Date;
 
 public class Character {
@@ -67,5 +69,24 @@ public class Character {
 
     public void setAlive(Boolean alive) {
         this.alive = alive;
+    }
+
+    public Integer getCharacterAgeDays() {
+        long timestampNow = new Date().getTime();
+        Log.i("AAAAAAAAAAAA", toString());
+        long timestampBirth = this.characterBirthDate.getTime();
+        return Math.toIntExact((timestampNow - timestampBirth) / (1000 * 60 * 60 * 24));
+    }
+
+    @Override
+    public String toString() {
+        return "Character{" +
+                "characterId='" + characterId + '\'' +
+                ", characterType=" + characterType +
+                ", characterName='" + characterName + '\'' +
+                ", characterBirthDate=" + characterBirthDate +
+                ", alive=" + alive +
+                ", life=" + life +
+                '}';
     }
 }

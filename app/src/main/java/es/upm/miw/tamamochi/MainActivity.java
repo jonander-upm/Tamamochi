@@ -4,16 +4,16 @@ import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.app.ActivityManager;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract;
@@ -22,20 +22,21 @@ import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.squareup.picasso.Picasso;
 
 import java.util.Arrays;
 import java.util.List;
 
 import es.upm.miw.tamamochi.activities.CharacterCreationActivity;
+import es.upm.miw.tamamochi.activities.CharacterListActivity;
+import es.upm.miw.tamamochi.activities.GameMainActivity;
+import es.upm.miw.tamamochi.dialogs.OverwriteCharacterAlertDialog;
 import es.upm.miw.tamamochi.domain.model.Character;
-import es.upm.miw.tamamochi.domain.model.Environment;
 import es.upm.miw.tamamochi.domain.model.TamamochiViewModel;
 import es.upm.miw.tamamochi.domain.repositories.CharacterRepository;
 import es.upm.miw.tamamochi.domain.services.ExternalWeatherService;
 import es.upm.miw.tamamochi.domain.services.ServiceRestarter;
 import es.upm.miw.tamamochi.domain.services.TamamochiNotificationManager;
-import es.upm.miw.tamamochi.domain.services.TelemetryPollingService;
+import es.upm.miw.tamamochi.domain.services.TamamochiPollingService;
 
 public class MainActivity extends AppCompatActivity {
     static final String TAG = "MiW";
@@ -43,11 +44,15 @@ public class MainActivity extends AppCompatActivity {
 
     Button playButton;
     Button loginButton;
+    Button createButton;
+    Button characterListButton;
 
     private TamamochiViewModel tamamochiViewModel;
     private CharacterRepository characterRepository;
 
     ActivityResultLauncher<Intent> signInLauncher;
+
+    Character playerCharacter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,6 +79,8 @@ public class MainActivity extends AppCompatActivity {
     private void instantiateLayoutItems() {
         playButton = findViewById(R.id.playButton);
         loginButton = findViewById(R.id.loginButton);
+        createButton = findViewById(R.id.createButton);
+        characterListButton = findViewById(R.id.characterListButton);
     }
 
     @Override
@@ -104,27 +111,35 @@ public class MainActivity extends AppCompatActivity {
         playButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FirebaseUser user = tamamochiViewModel.getCurrentUser();
-                characterRepository.findByUidAndAlive(user.getUid(), true).observe(MainActivity.this, new Observer<Character>() {
-                    @Override
-                    public void onChanged(Character character) {
-                        Intent intent;
-                        if(character == null) {
-                            intent = new Intent(getApplicationContext(), CharacterCreationActivity.class);
-                            startActivity(intent);
-                        } else {
-
-                        }
-                    }
-                });
+                Intent intent;
+                if(playerCharacter == null) {
+                    intent = new Intent(getApplicationContext(), CharacterCreationActivity.class);
+                } else {
+                    tamamochiViewModel.setCharacter(playerCharacter);
+                    intent = new Intent(getApplicationContext(), GameMainActivity.class);
+                }
+                startActivity(intent);
+            }
+        });
+        createButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new OverwriteCharacterAlertDialog().show(getSupportFragmentManager(), "OVERWRITE_DIALOG");
+            }
+        });
+        characterListButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), CharacterListActivity.class);
+                startActivity(intent);
             }
         });
     }
 
     public void startServices() {
         startService(new Intent(this, ExternalWeatherService.class));
-        if (!isMyServiceRunning(TelemetryPollingService.class)) {
-            Intent pollingServiceIntent = new Intent(this, TelemetryPollingService.class);
+        if (!isMyServiceRunning(TamamochiPollingService.class)) {
+            Intent pollingServiceIntent = new Intent(this, TamamochiPollingService.class);
             startService(pollingServiceIntent);
         }
         if (!isMyServiceRunning(TamamochiNotificationManager.class)) {
@@ -173,12 +188,22 @@ public class MainActivity extends AppCompatActivity {
         if(currentUser != null) {
             tamamochiViewModel.setCurrentUser(currentUser);
             playButton.setVisibility(View.VISIBLE);
+            createButton.setVisibility(View.VISIBLE);
+            characterListButton.setVisibility(View.VISIBLE);
             loginButton.setVisibility(View.INVISIBLE);
             Snackbar.make(findViewById(R.id.menuConstraintView),
                     getString(R.string.welcomeMessage) + " " + currentUser.getDisplayName() + "!",
                     Snackbar.LENGTH_SHORT).show();
+            tamamochiViewModel.getCharacter().observe(MainActivity.this, new Observer<Character>() {
+                @Override
+                public void onChanged(Character character) {
+                    playerCharacter = character;
+                }
+            });
         } else {
             playButton.setVisibility(View.INVISIBLE);
+            createButton.setVisibility(View.INVISIBLE);
+            characterListButton.setVisibility(View.INVISIBLE);
             loginButton.setVisibility(View.VISIBLE);
         }
     }

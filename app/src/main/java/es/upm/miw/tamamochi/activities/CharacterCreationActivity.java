@@ -1,5 +1,6 @@
 package es.upm.miw.tamamochi.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
@@ -9,6 +10,7 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.content.res.AppCompatResources;
+import androidx.lifecycle.ViewModelProvider;
 
 import java.util.Date;
 
@@ -58,7 +60,7 @@ public class CharacterCreationActivity extends AppCompatActivity {
                         break;
                     case R.id.createButton:
                         createCharacter();
-                        // TODO Add next Activity intent
+                        startActivity(new Intent(CharacterCreationActivity.this, GameMainActivity.class));
                         break;
                     default:
                         break;
@@ -75,7 +77,8 @@ public class CharacterCreationActivity extends AppCompatActivity {
         Character character = new Character(CharacterType.values()[characterTypeIndex],
                 etCharacter.getText().toString(),
                 new Date());
-        CharacterRepository.getInstance().saveCharacter(character, tamamochiViewModel.getCurrentUser().getUid());
+        Character savedCharacter = CharacterRepository.getInstance().saveCharacter(character, tamamochiViewModel.getCurrentUser().getUid());
+        tamamochiViewModel.setCharacter(savedCharacter);
     }
 
     private void manageSelectionIndex(int i) {

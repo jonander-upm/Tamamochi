@@ -11,10 +11,10 @@ public class ServiceRestarter extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         Log.i("Broadcast Listened", "Service tried to stop");
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            context.startForegroundService(new Intent(context, TelemetryPollingService.class));
+            context.startForegroundService(new Intent(context, TamamochiPollingService.class));
             context.startForegroundService(new Intent(context, TamamochiNotificationManager.class));
         } else {
-            context.startService(new Intent(context, TelemetryPollingService.class));
+            context.startService(new Intent(context, TamamochiPollingService.class));
             context.startService(new Intent(context, TamamochiNotificationManager.class));
         }
     }

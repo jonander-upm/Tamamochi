@@ -1,5 +1,7 @@
 package es.upm.miw.tamamochi.domain.model;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,25 +52,34 @@ public enum CharacterStatus {
         return resolutionStringId;
     }
 
-    public static List<CharacterStatus> getCharacterStatusList(Environment environment) {
+    public static List<CharacterStatus> getCharacterStatusList(Measurement measurement) {
         List<CharacterStatus> characterStatusList = new ArrayList<>();
 
-        if(environment.getTemperature() < COLD_THRESHOLD) {
+        double temp = Double.parseDouble(measurement.getTemperature().get(0).getValue());
+        double hum = Double.parseDouble(measurement.getHumidity().get(0).getValue());
+        double light = Double.parseDouble(measurement.getLight().get(0).getValue());
+        double co2 = Double.parseDouble(measurement.getCo2().get(0).getValue());
+
+        if(temp < COLD_THRESHOLD) {
             characterStatusList.add(CharacterStatus.COLD);
-        } else if(environment.getTemperature() > HOT_THRESHOLD) {
+        } else if(temp > HOT_THRESHOLD) {
             characterStatusList.add(CharacterStatus.HOT);
         }
-        if (environment.getHumidity() < DRY_THRESHOLD) {
+        if (hum < DRY_THRESHOLD) {
             characterStatusList.add(CharacterStatus.DRY);
-        } else if (environment.getHumidity() > HUMID_THRESHOLD) {
+        } else if (hum > HUMID_THRESHOLD) {
             characterStatusList.add(CharacterStatus.HUMID);
         }
-        if (environment.getLight() > BRIGHT_LIGHT_THRESHOLD) {
+        if (light > BRIGHT_LIGHT_THRESHOLD) {
             characterStatusList.add(CharacterStatus.BRIGHT_LIGHT);
         }
-        if (environment.getCo2() > HIGH_CO2_THRESHOLD) {
+        if (co2 > HIGH_CO2_THRESHOLD) {
             characterStatusList.add(CharacterStatus.HIGH_CO2);
         }
         return characterStatusList;
+    }
+
+    public double getLifeDrainPerMinute() {
+        return lifeDrainPerMinute;
     }
 }

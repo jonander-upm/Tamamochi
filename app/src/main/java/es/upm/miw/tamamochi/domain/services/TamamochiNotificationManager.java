@@ -23,6 +23,7 @@ import java.util.List;
 
 import es.upm.miw.tamamochi.MainActivity;
 import es.upm.miw.tamamochi.R;
+import es.upm.miw.tamamochi.activities.GameMainActivity;
 import es.upm.miw.tamamochi.domain.model.CharacterStatus;
 import es.upm.miw.tamamochi.domain.model.TamamochiViewModel;
 
@@ -57,7 +58,7 @@ public class TamamochiNotificationManager extends LifecycleService {
     }
 
     private void setupStatusNotifications() {
-        Intent tapIntent = new Intent(this, MainActivity.class);
+        Intent tapIntent = new Intent(this, GameMainActivity.class);
         tapIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, tapIntent, PendingIntent.FLAG_IMMUTABLE);
         nm = NotificationManagerCompat.from(getApplicationContext());
@@ -125,7 +126,9 @@ public class TamamochiNotificationManager extends LifecycleService {
             public void onChanged(List<CharacterStatus> characterStatusList) {
                 for(CharacterStatus statusItem : characterStatusList) {
                     nBuilder.setContentText(getString(statusItem.getIssueStringId()));
-                    nm.notify(NOTIFICATION_ID, nBuilder.build());
+                    Notification notification = nBuilder.build();
+                    notification.flags |= Notification.FLAG_ONLY_ALERT_ONCE;
+                    nm.notify(NOTIFICATION_ID, notification);
                 }
             }
         });
