@@ -17,7 +17,7 @@ public enum CharacterStatus {
     HOT(R.string.issueTempTooHigh, R.string.resolutionTempTooHigh, 1.0),
     HUMID(R.string.issueHumidityTooHigh, R.string.resolutionHumidityTooHigh, 0.1),
     DRY(R.string.issueHumidityTooLow, R.string.resolutionHumidityTooLow, 0.1),
-    BRIGHT_LIGHT(R.string.issueLightTooBright, R.string.resolutionLightTooBright, 0.3),
+    BRIGHT_LIGHT(R.string.issueLightTooBright, R.string.resolutionLightTooBright, 0.5),
     HIGH_CO2(R.string.issueCo2TooHigh, R.string.resolutionCo2TooHigh, 1.2);
 
     /* https://organosdepalencia.com/biblioteca/articulo/read/76694-cual-es-la-temperatura-minima-recomendada-por-la-oms */

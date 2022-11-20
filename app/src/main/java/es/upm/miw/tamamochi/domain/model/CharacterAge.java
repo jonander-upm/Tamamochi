@@ -9,7 +9,7 @@ public enum CharacterAge {
     BABY(72, 2),
     ADULT(240, 1),
     OLD(360, 3),
-    DEAD(780, 0),
+    DEAD(432, 0),
     NONE(0, 0);
 
     final int ageHours;
@@ -27,7 +27,6 @@ public enum CharacterAge {
     public static CharacterAge getCharacterAge(Date birthDate) {
         Date now = new Date();
         double ageHours = (double) (now.getTime() - birthDate.getTime()) / 3600000;
-        Log.i("AgeHours", String.valueOf(ageHours));
         for(CharacterAge characterAge : values()) {
             if(ageHours <= characterAge.getAgeHours()) {
                 return characterAge;
