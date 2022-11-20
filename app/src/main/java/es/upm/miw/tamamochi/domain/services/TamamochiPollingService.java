@@ -189,7 +189,7 @@ public class TamamochiPollingService extends LifecycleService {
     public int onStartCommand(Intent intent, int flags, int startId) {
         super.onStartCommand(intent, flags, startId);
         handler = new Handler();
-        handler.postDelayed(runnableService, 1000);
+        handler.postDelayed(runnableService, 3000);
         return Service.START_STICKY;
     }
 
@@ -203,15 +203,16 @@ public class TamamochiPollingService extends LifecycleService {
     }
 
     private void handleLifeDrain(List<CharacterStatus> characterStatusList) {
-        if(character != null) {
+        if(character != null && character.getAlive()) {
             int characterLife = character.getLife();
-            if(characterLife > 0 && CharacterAge.getCharacterAge(character.getCharacterBirthDate()) != CharacterAge.DEAD) {
-                CharacterAge characterAge = CharacterAge.getCharacterAge(character.getCharacterBirthDate());
-                for (CharacterStatus status : characterStatusList) {
-                    characterLife -= status.getLifeDrainPerMinute() * characterAge.getDrainMultiplier();
-                }
-                tamamochiViewModel.setCharacter(character);
-            } else {
+            CharacterAge characterAge = CharacterAge.getCharacterAge(character.getCharacterBirthDate());
+            for (CharacterStatus status : characterStatusList) {
+                characterLife -= status.getLifeDrainPerMinute() * characterAge.getDrainMultiplier();
+            }
+            if(characterStatusList.size() == 0 && (characterLife + 3) < 100) {
+                characterLife += 3;
+            }
+            if(characterLife < 0){
                 characterLife = 0;
                 character.setAlive(false);
             }

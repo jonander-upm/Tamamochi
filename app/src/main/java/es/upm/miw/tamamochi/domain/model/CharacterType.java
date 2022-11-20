@@ -4,7 +4,7 @@ import es.upm.miw.tamamochi.R;
 
 public enum CharacterType {
     AXOLITTLE(R.drawable.axolittle_egg,R.drawable.axolittle_baby, R.drawable.axolittle_default,R.drawable.axolittle_old, R.drawable.axolittle_dead),
-    CAPYBARBARA(0,0,R.drawable.ic_launcher_foreground,0, 0); // TODO add character drawables
+    GECKY(R.drawable.gecky_egg,R.drawable.gecky_baby,R.drawable.gecky,R.drawable.gecky_old, R.drawable.gecky_dead);
 
     final int eggDrawableId;
     final int babyDrawableId;

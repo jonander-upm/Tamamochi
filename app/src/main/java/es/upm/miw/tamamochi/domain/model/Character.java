@@ -73,7 +73,6 @@ public class Character {
 
     public Integer getCharacterAgeDays() {
         long timestampNow = new Date().getTime();
-        Log.i("AAAAAAAAAAAA", toString());
         long timestampBirth = this.characterBirthDate.getTime();
         return Math.toIntExact((timestampNow - timestampBirth) / (1000 * 60 * 60 * 24));
     }
