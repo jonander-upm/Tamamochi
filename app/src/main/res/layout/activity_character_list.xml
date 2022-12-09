@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/menu_background">
+    <TextView
+        android:id="@+id/tvCharacterList"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="70dp"
+        android:textColor="@color/title"
+        android:fontFamily="@font/bakso_sapi"
+        android:textSize="20sp"
+        android:text="@string/txtCharacterList"/>
+    <ListView
+        android:id="@+id/lvCharacters"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@id/tvCharacterList"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_margin="25dp"
+        android:divider="@android:color/transparent"
+        android:dividerHeight="10dp">
+    </ListView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
